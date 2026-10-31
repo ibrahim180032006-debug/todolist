@@ -1,0 +1,75 @@
+/* section fonts */
+@font-face {
+  font-family: a;
+  src: url(../public/fonts/Figtree-Italic-VariableFont_wght.ttf) format('truetype');
+}
+
+body {
+  font-family: a !important;
+  background-color: #0f172a !important;
+  color: #f8fafc;
+  margin: 0;
+  padding: 0;
+}
+
+/* تنسيق عام واحترافي للبطاقات والمهام */
+.brahim {
+  transition: all 0.3s ease-in-out;
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  margin-bottom: 12px !important;
+}
+
+.brahim:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.4) !important;
+  border-color: rgba(99, 102, 241, 0.4) !important;
+}
+
+/* تنسيق الحاوية الرئيسية للتطبيق */
+.App {
+  display: flex;
+  background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+/* تحسين شكل الحقول والأزرار والنصوص العامة */
+.MuiCard-root {
+  background-color: #1e293b !important;
+  color: #f8fafc !important;
+  border-radius: 20px !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.MuiDialog-paper {
+  background-color: #1e293b !important;
+  color: #f8fafc !important;
+  border-radius: 16px !important;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.MuiTextField-root .MuiInput-root {
+  color: #fff !important;
+}
+
+.MuiTextField-root .MuiInput-underline::before {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.MuiTextField-root .MuiInput-underline::after {
+  border-bottom: 2px solid #6366f1 !important;
+}
+
+.MuiInputLabel-root {
+  color: #94a3b8 !important;
+}
+
+.MuiInputLabel-root.Mui-focused {
+  color: #818cf8 !important;
+}
