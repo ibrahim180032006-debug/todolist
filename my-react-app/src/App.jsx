@@ -13,8 +13,8 @@ import Product from './Product';
 const initialtodos = [
   {
     id:uuidv4(),
-    title:'',
-    details :'',
+    title:'write your first misson',
+    details :'ex:i need sleep at 20:00pm',
     isconfirme : false ,
   }
 ] 
