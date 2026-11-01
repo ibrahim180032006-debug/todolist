@@ -7,7 +7,9 @@ import './App.css';
 import Todolist from './Todolist/Todolist';
 import { v4 as uuidv4 } from 'uuid';
 import { TodosUseContext } from './Context/Todocontext';
+import Test from './Todolist/Test';
 import { useState } from 'react';
+import Product from './Product';
 const initialtodos = [
   {
     id:uuidv4(),
@@ -15,8 +17,15 @@ const initialtodos = [
     details :'',
     isconfirme : false ,
   }
-]
+] 
+
 function App () {
+  const [number, setNumber] = useState(5);
+  const [dark, setDark] = useState(false);
+
+  const result = number * 2;
+
+  console.log("Calculating!");
    const [todos , useTodos] =  useState(initialtodos);
 return(  
      <div className="App" style={{display:'flex',
@@ -26,9 +35,22 @@ return(
         <TodosUseContext.Provider value={{todos , useTodos  }}>
            <Todolist/>
         </TodosUseContext.Provider>
-    
+    <div>
+      <h1>Result: {result}</h1>
+
+      <button onClick={() => setNumber(number + 1)}>
+        Change Number
+      </button>
+
+      <button onClick={() => setDark(!dark)}>
+        Change Color
+      </button>
+    </div>
+
+
           
-     
+     <Test></Test>
+     <Product/>
    </div>
   )
 }

@@ -155,7 +155,7 @@ import Todo from './Todo';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState , useMemo} from 'react';
 import { TodosUseContext } from '../Context/Todocontext';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -179,17 +179,20 @@ export default function Todolist() {
 
 
 
-const completedTodos = todos.filter((t)=>{
-  if(displayedtodos === "completed"){
-    
-    return t.isconfirme === true;
- 
-  } else if (displayedtodos === "non-completed"){
-    return t.isconfirme === false;
-  }
-  return true ;
-  
-});
+
+const completedTodos = useMemo(() => {
+  return todos.filter((t) => {
+    if (displayedtodos === "completed") {
+      return t.isconfirme === true;
+    } else if (displayedtodos === "non-completed") {
+      return t.isconfirme === false;
+    }
+
+    return true;
+  });
+}, [todos, displayedtodos]);
+
+
 
 
   // 1. جلب البيانات من LocalStorage عند فتح التطبيق لأول مرة بأمان
