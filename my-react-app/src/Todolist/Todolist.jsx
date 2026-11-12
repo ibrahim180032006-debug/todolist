@@ -142,6 +142,9 @@
 //   );
 // }
 // import * as React from 'react';
+import { useContext, useMemo, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
+
 import Container from '@mui/material/Container';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -149,154 +152,113 @@ import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Todo from './Todo';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
-import { useContext, useEffect, useState , useMemo} from 'react';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+import Todo from './Todo';
 import { TodosUseContext } from '../Context/Todocontext';
-import { v4 as uuidv4 } from 'uuid';
+
+// خارج المكوّن: يُنشأ مرة واحدة
+const theme = createTheme({
+  typography: { fontFamily: 'Roboto, Arial, sans-serif' },
+  palette: { primary: { main: '#0288d1' } },
+});
 
 export default function Todolist() {
-  const theme = createTheme({
-    status: {
-      Typography: {
-        fontFamily: ['a'],
-         palette: {
-    primary: {
-      main: '#0288d1',
-    },
-  },
-      },
-    },
-  });
+  const { todos, setTodos } = useContext(TodosUseContext);
+  const [myInput, setMyInput] = useState('');
+  const [displayedTodos, setDisplayedTodos] = useState('all');
 
-  const { todos, useTodos } = useContext(TodosUseContext);
-  const [myinput, setinput] = useState('');
-  const [displayedtodos , setdisplayedtodos ] = useState("all");
+  // فلترة محسوبة مرة واحدة
+  const filteredTodos = useMemo(() => {
+    if (displayedTodos === 'completed') return todos.filter((t) => t.isconfirme);
+    if (displayedTodos === 'non-completed') return todos.filter((t) => !t.isconfirme);
+    return todos;
+  }, [todos, displayedTodos]);
 
-
-
-
-const completedTodos = useMemo(() => {
-  return todos.filter((t) => {
-    if (displayedtodos === "completed") {
-      return t.isconfirme === true;
-    } else if (displayedtodos === "non-completed") {
-      return t.isconfirme === false;
-    }
-
-    return true;
-  });
-}, [todos, displayedtodos]);
-
-
-
-
-  // 1. جلب البيانات من LocalStorage عند فتح التطبيق لأول مرة بأمان
-  useEffect(() => {
-    const StorageTodos = JSON.parse(localStorage.getItem('todos'));
-    if (StorageTodos) {
-      useTodos(StorageTodos);
-    }
-  }, []);
-
-  // دالة لتحديث حالة المهمة (مكتملة أم لا) بطريقة آمنة
-  function handelclickbutton(todoId) {
-    const updatedTodos = todos.map((t) => {
-      if (t.id === todoId) {
-        return { ...t, isconfirme: !t.isconfirme }; // استخدام Spread Operator للتعديل الآمن
-      }
-      return t;
-    });
-
-    useTodos(updatedTodos);
-    localStorage.setItem('todos', JSON.stringify(updatedTodos));
+  // toggle
+  function handleToggle(todoId) {
+    setTodos(
+      todos.map((t) =>
+        t.id === todoId ? { ...t, isconfirme: !t.isconfirme } : t
+      )
+    );
   }
 
-  // دالة إضافة مهمة جديدة
-  function allertme() {
-    if (myinput.trim() === '') {
-      return; // منع إضافة مهام فارغة
-    }
+  // إضافة
+  function handleAdd() {
+    const title = myInput.trim();
+    if (!title) return;
 
-
- 
     const newTodo = {
       id: uuidv4(),
-      title: myinput,
+      title,
       details: '',
       isconfirme: false,
-      
     };
 
-    const updatedTodos = [...todos, newTodo];
-    useTodos(updatedTodos);
-    localStorage.setItem('todos', JSON.stringify(updatedTodos));
-    setinput('');
+    setTodos([...todos, newTodo]);
+    setMyInput('');
   }
-
-  // رسم قائمة المهام بطريقة آمنة (التأكد أن todos مصفوفة وليست null)
-  const mytodos = Array.isArray(todos) ? completedTodos.map((event) => {
-    return (<Todo key={event.id} handelclick={handelclickbutton} todo={event} />);
-  }) : null;
 
   return (
     <Container maxWidth="sm">
-      <Card sx={{ minWidth: 275 }} style={{maxHeight:"80vh",overflowY:'scroll'}}>
+      <Card sx={{ minWidth: 275, maxHeight: '80vh', overflowY: 'auto' }}>
         <ThemeProvider theme={theme}>
           <CardContent>
-            <Typography style={{ fontFamily: 'a' }} variant="h3" gutterBottom sx={{ textAlign: 'center', display: 'block', color: 'text.secondary', fontSize: 28, fontWeight: 'bold' }} component="div">
+            <Typography
+              variant="h3"
+              gutterBottom
+              sx={{
+                textAlign: 'center',
+                fontSize: 28,
+                fontWeight: 'bold',
+                color: 'text.secondary',
+              }}
+            >
               to-Do-list
               <Divider variant="inset" />
-              {/* filter toggle button */}
+
               <ToggleButtonGroup
-              value={displayedtodos}
-            
-              onChange={(e)=>{
-                setdisplayedtodos(e.target.value)
-              }}
-                style={{ marginTop: '9px' }}
+                value={displayedTodos}
+                onChange={(e, value) => value && setDisplayedTodos(value)}
                 exclusive
-                aria-label="text alignment"
+                sx={{ mt: 1 }}
               >
-                <ToggleButton  color='primary' value="all" aria-label="left aligned">
-                  all
-                </ToggleButton>
-                <ToggleButton  color='primary' value="completed" aria-label="centered">
-                  finished
-                </ToggleButton>
-                <ToggleButton  color='primary' value="non-completed" aria-label="right aligned">
-                  not finished
-                </ToggleButton>
+                <ToggleButton color="primary" value="all">all</ToggleButton>
+                <ToggleButton color="primary" value="completed">finished</ToggleButton>
+                <ToggleButton color="primary" value="non-completed">not finished</ToggleButton>
               </ToggleButtonGroup>
             </Typography>
 
-            {/* mytodo */}
-            {mytodos}
+            {filteredTodos.map((todo) => (
+              <Todo
+                key={todo.id}
+                todo={todo}
+                onToggle={handleToggle}
+              />
+            ))}
 
-            {/* input + add button */}
-            <Grid style={{ marginTop: '10px' }} container spacing={2}>
+            <Grid container spacing={2} sx={{ mt: 1 }}>
               <Grid item xs={4}>
-                <Button 
-                  onClick={allertme} 
-                  style={{ width: '100%', height: '100%' }} 
+                <Button
+                  onClick={handleAdd}
                   variant="contained"
-                 
+                  sx={{ width: '100%', height: '100%' }}
                 >
                   Add
                 </Button>
               </Grid>
               <Grid item xs={8}>
-                <TextField 
-                  value={myinput} 
-                  onChange={(e) => { setinput(e.target.value); }} 
-                  style={{ width: '100%', margin: '2px' }} 
-                  id="standard-basic" 
-                  label="mission" 
-                  variant="standard" 
+                <TextField
+                  value={myInput}
+                  onChange={(e) => setMyInput(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
+                  label="mission"
+                  variant="standard"
+                  fullWidth
                 />
               </Grid>
             </Grid>

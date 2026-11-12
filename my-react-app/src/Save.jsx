@@ -136,3 +136,17 @@
 // +import Stack from '@mui/material/Stack';
 // import Button from '@mui/material/Button';
 // import Container from '@mui/material/Container';
+// seEffect
+// تنفيذ عملية جانبية
+
+// التعامل مع العالم الخارجي بعد تحديث واجهة React.
+
+// مثال: API، Timer، LocalStorage، WebSocket.
+
+
+// useMemo
+// حفظ نتيجة الحساب
+
+// تجنب إعادة حساب قيمة مكلفة عندما لا تتغير مدخلاتها.
+
+// مثال: Filter، Sort، Calculations.
